@@ -15,6 +15,8 @@
 #include "common.h"
 #include "iksemel.h"
 
+#include <stdint.h>
+
 #ifdef HAVE_GNUTLS
 #include <gnutls/gnutls.h>
 #endif

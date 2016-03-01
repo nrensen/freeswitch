@@ -276,6 +276,10 @@ void octet_string_set_to_zero(void *s, size_t len);
 #include <byteswap.h>
 #define be32_to_cpu(x) bswap_32((x))
 #define be64_to_cpu(x) bswap_64((x))
+#elif defined(__OpenBSD__)
+#include<sys/endian.h>
+#define be32_to_cpu(x) swap32((x))
+#define be64_to_cpu(x) swap64((x))
 #else /* WORDS_BIGENDIAN */
 
 #if defined(__GNUC__) && defined(HAVE_X86)

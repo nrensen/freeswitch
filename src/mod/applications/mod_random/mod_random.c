@@ -116,8 +116,10 @@ SWITCH_MODULE_RUNTIME_FUNCTION(mod_random_runtime)
 #include <fcntl.h>
 #include <sys/time.h>
 #include <time.h>
+#ifndef __OpenBSD__
 #include <linux/types.h>
 #include <linux/random.h>
+#endif
 #include <string.h>
 
 
@@ -138,9 +140,15 @@ static int random_add_entropy(int fd, void *buf, size_t size)
 	e.size = size;
 	e.data = (unsigned char *) buf;
 
+#ifdef __OpenBSD__
+	if (write(fd, buf, size) == -1) {
+		r = 1;
+	}
+#else
 	if (ioctl(fd, RNDADDENTROPY, &e) != 0) {
 		r = 1;
 	}
+#endif
 
 	return r;
 }

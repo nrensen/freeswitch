@@ -27,7 +27,7 @@ bindir="@bindir@"
 libdir="@libdir@"
 includedir="@includedir@"
 
-LIBS="@APRUTIL_EXPORT_LIBS@"
+LIBS=
 INCLUDES="@APRUTIL_INCLUDES@"
 LDFLAGS="@APRUTIL_LDFLAGS@"
 

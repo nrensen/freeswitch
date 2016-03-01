@@ -2309,7 +2309,7 @@ void *SWITCH_THREAD_FUNC sofia_msg_thread_run(switch_thread_t *thread, void *obj
 	msg_queue_threads++;
 	switch_mutex_unlock(mod_sofia_globals.mutex);
 
-	switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING, "MSG Thread %d Started\n", my_id);
+	switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_INFO, "MSG Thread %d Started\n", my_id);
 
 
 	for(;;) {
@@ -2327,7 +2327,7 @@ void *SWITCH_THREAD_FUNC sofia_msg_thread_run(switch_thread_t *thread, void *obj
 		}
 	}
 
-	switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING, "MSG Thread Ended\n");
+	switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_INFO, "MSG Thread Ended\n");
 
 	switch_mutex_lock(mod_sofia_globals.mutex);
 	msg_queue_threads--;

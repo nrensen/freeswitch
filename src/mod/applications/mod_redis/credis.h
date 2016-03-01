@@ -89,7 +89,7 @@ typedef struct _cr_redis* REDIS;
 #define CREDIS_VERSION_STRING_SIZE 32
 
 typedef struct _cr_info {
-  char redis_version[CREDIS_VERSION_STRING_SIZE];
+  char redis_version[CREDIS_VERSION_STRING_SIZE + 1];
   int bgsave_in_progress;
   int connected_clients;
   int connected_slaves;

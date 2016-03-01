@@ -382,6 +382,7 @@ static struct dist_node *find_node(struct dist_list *list, const char *name)
 	return np;
 }
 
+#undef MAX
 #define MAX 50
 
 SWITCH_STANDARD_API(distributor_ctl_function)

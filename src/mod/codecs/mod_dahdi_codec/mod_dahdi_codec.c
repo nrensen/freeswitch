@@ -33,7 +33,11 @@
 #include <switch.h>
 #include <g711.h>
 #include <poll.h>
+#ifdef __OpenBSD__
+typedef u_int32_t __u32;
+#else
 #include <linux/types.h>		/* __u32 */
+#endif
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <fcntl.h>

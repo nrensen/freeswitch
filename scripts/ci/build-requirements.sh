@@ -155,7 +155,8 @@ check_libtoolize() {
   ltl_version=`echo $ltl_pversion|sed -e 's/\([a-z]*\)$/.\1/'`
   IFS=.; set $ltl_version; IFS=' '
 
-  if [ "x${lt_version}" != "x${ltl_version}" ]; then
+  # OpenBSD has its own libtool
+  if [ "x${lt_version}" != "x${ltl_version}" -a `uname -s` != "OpenBSD" ]; then
     echo "$libtool and $libtoolize have different versions"
     exit 1
   fi

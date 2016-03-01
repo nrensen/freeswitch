@@ -13,7 +13,7 @@ AM_CFLAGS  += `../apr/apr-1-config --cflags --cppflags --includes || $(prefix)/b
 AM_CFLAGS  += `../apr-util/apu-1-config --includes || $(prefix)/bin/apu-1-config --includes`
 AM_CFLAGS  += -I../iksemel/include
 
-lib_LTLIBRARIES		= libdingaling.la
+noinst_LTLIBRARIES	= libdingaling.la
 libdingaling_la_SOURCES	= src/libdingaling.c src/sha1.c
 libdingaling_la_CFLAGS	= $(AM_CFLAGS)
 libdingaling_la_LDFLAGS	= $(AM_LDFLAGS)

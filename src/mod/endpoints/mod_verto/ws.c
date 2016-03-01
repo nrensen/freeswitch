@@ -769,14 +769,14 @@ ssize_t ws_close(wsh_t *wsh, int16_t reason)
 
 uint64_t hton64(uint64_t val)
 {
-	if (__BYTE_ORDER == __BIG_ENDIAN) return (val);
-	else return __bswap_64(val);
+	if (BYTE_ORDER == BIG_ENDIAN) return (val);
+	else return swap64(val);
 }
 
 uint64_t ntoh64(uint64_t val)
 {
-	if (__BYTE_ORDER == __BIG_ENDIAN) return (val);
-	else return __bswap_64(val);
+	if (BYTE_ORDER == BIG_ENDIAN) return (val);
+	else return swap64(val);
 }
 
 

@@ -159,7 +159,18 @@ static void destroy_perl(PerlInterpreter ** to_destroy)
 
 static PerlInterpreter *clone_perl(void)
 {
-	PerlInterpreter *my_perl = perl_clone(globals.my_perl, CLONEf_COPY_STACKS | CLONEf_KEEP_PTR_TABLE);
+	PerlInterpreter *my_perl = perl_alloc();
+	if (!my_perl) {
+		switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_ERROR, "Could not allocate perl interpreter\n");
+		return SWITCH_STATUS_MEMERR;
+	}
+
+	switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_INFO, "Allocated perl intrepreter.\n");
+
+	perl_construct(my_perl);
+	perl_parse(my_perl, xs_init, 3, embedding, NULL);
+	perl_run(my_perl);
+
 	PERL_SET_CONTEXT(my_perl);
 	return my_perl;
 }

@@ -139,7 +139,7 @@ APR_LIBS   = $(AM_LIBAPU_LIBS) $(AM_LIBAPR_LIBS)
 CORE_LIBS=
 
 if ENABLE_LIBVPX
-CORE_LIBS += libs/libvpx/libvpx.a
+CORE_LIBS += $(switch_srcdir)/libs/libvpx/libvpx.a
 endif
 if SYSTEM_APRUTIL
 CORE_LIBS += $(AM_LIBAPU_LINKLIBTOOL)
@@ -149,7 +149,7 @@ endif
 if SYSTEM_APR
 CORE_LIBS += $(AM_LIBAPR_LINKLIBTOOL)
 else
-CORE_LIBS += libs/apr/libapr-1.la
+#CORE_LIBS += libs/apr/libapr-1.la
 endif
 
 if ENABLE_SRTP
@@ -455,7 +455,7 @@ endif
 fs_encode_SOURCES = src/fs_encode.c
 fs_encode_CFLAGS  = $(AM_CFLAGS)
 fs_encode_LDFLAGS = $(AM_LDFLAGS)
-fs_encode_LDADD   = libfreeswitch.la $(CORE_LIBS) $(APR_LIBS)
+fs_encode_LDADD   = libfreeswitch.la
 
 if HAVE_ODBC
 fs_encode_LDADD += $(ODBC_LIB_FLAGS)
@@ -475,7 +475,7 @@ fs_tts_LDADD   = libfreeswitch.la $(CORE_LIBS) $(APR_LIBS)
 tone2wav_SOURCES = src/tone2wav.c
 tone2wav_CFLAGS  = $(AM_CFLAGS)
 tone2wav_LDFLAGS = $(AM_LDFLAGS)
-tone2wav_LDADD   = libfreeswitch.la $(CORE_LIBS) $(APR_LIBS)
+tone2wav_LDADD   = libfreeswitch.la
 
 if HAVE_ODBC
 tone2wav_LDADD += $(ODBC_LIB_FLAGS)
@@ -577,7 +577,7 @@ src/include/switch_version.h: src/include/switch_version.h.in Makefile $(switch_
 ##
 ## Dependency targets
 ##
-libs/libedit/src/.libs/libedit.a:
+libs/libedit/src/libedit.la:
 	cd libs/libedit && $(MAKE)
 
 libs/libzrtp/libzrtp.a:
@@ -586,7 +586,7 @@ libs/libzrtp/libzrtp.a:
 libs/libvpx/Makefile: libs/libvpx/.update
 	cd libs/libvpx && CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS) $(VISIBILITY_FLAG)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)" ./configure --enable-pic --disable-docs --disable-examples --disable-install-bins --disable-install-srcs --disable-unit-tests --size-limit=16384x16384
 
-libs/libvpx/libvpx.a: libs/libvpx/Makefile libs/libvpx/.update
+$(switch_srcdir)/libs/libvpx/libvpx.a: libs/libvpx/Makefile libs/libvpx/.update
 	@cd libs/libvpx && $(MAKE)
 
 libs/apr/Makefile: libs/apr/Makefile.in libs/apr/config.status libs/apr libs/apr/.update

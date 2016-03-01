@@ -4,7 +4,7 @@
 
 AM_CPPFLAGS = -I$(top_srcdir)/include
 
-lib_LTLIBRARIES = libiksemel.la
+noinst_LTLIBRARIES = libiksemel.la
 
 if DO_POSIX
 posix_c = io-posix.c

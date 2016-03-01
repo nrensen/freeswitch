@@ -1324,7 +1324,7 @@ SWITCH_DECLARE(void) switch_core_setrlimits(void)
 	   feel free to submit a patch to https://github.com/signalwire/freeswitch
 	 */
 
-#ifndef __FreeBSD__
+#if !defined(__FreeBSD__) && !defined(__OpenBSD__)
 	memset(&rlp, 0, sizeof(rlp));
 	rlp.rlim_cur = SWITCH_THREAD_STACKSIZE;
 	rlp.rlim_max = SWITCH_SYSTEM_THREAD_STACKSIZE;

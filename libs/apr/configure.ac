@@ -207,8 +207,8 @@ if test "x$use_libtool" = "xyes"; then
       lt_version="-version-info `$get_version libtool $version_hdr APR`"
       link="\$(LIBTOOL) \$(LTFLAGS) --mode=link \$(LT_LDFLAGS) \$(COMPILE) ${lt_version} \$(ALL_LDFLAGS) -o \$@"
       so_ext='lo'
-      lib_target='-rpath $(libdir) $(OBJECTS)'
-      export_lib_target='-rpath \$(libdir) \$(OBJECTS)'
+      lib_target='$(OBJECTS)'
+      export_lib_target='\$(OBJECTS)'
 else
       lt_compile='$(COMPILE) -o $@ -c $<'
       link='$(AR) cr $(TARGET_LIB) $(OBJECTS); $(RANLIB) $(TARGET_LIB)'

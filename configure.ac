@@ -1217,7 +1217,8 @@ case $host in
        size_t_fmt='#define SWITCH_SIZE_T_FMT "lu"'
        ;;
    *-openbsd*)
-       size_t_fmt='#define SWITCH_SIZE_T_FMT "ld"'
+       size_t_fmt='#define SWITCH_SIZE_T_FMT "lu"'
+       ssize_t_fmt='#define SWITCH_SSIZE_T_FMT "ld"'
        ;;
    *aix4*|*aix5*)
        ssize_t_fmt='#define SWITCH_SSIZE_T_FMT "ld"'
@@ -1503,7 +1504,6 @@ PKG_CHECK_MODULES([MEMCACHED], [libmemcached >= 0.31],[
   LIBS="${MEMCACHED_LIBS}"
   CPPFLAGS="${MEMCACHED_CFLAGS}"
   AC_CHECK_FUNCS([memcached_server_name memcached_stat_execute])
-  AC_CHECK_TYPES([memcached_instance_st*],,, [[#include <libmemcached/memcached.h>]])
   LIBS="${save_LIBS}"
   CPPFLAGS="${save_CPPFLAGS}"
 ],[
@@ -1569,8 +1569,11 @@ AC_ARG_ENABLE(core-libedit-support,
 AS_IF([test "x$enable_core_libedit_support" != "xno"],[
   PKG_CHECK_MODULES([LIBEDIT], [libedit >= 2.11],,[
     AC_MSG_RESULT([no])
-    AC_CHECK_LIB([edit], [el_line], [LIBEDIT_LIBS=-ledit])
+    save_LIBS="${LIBS}"
+    LIBS=-lncurses
+    AC_CHECK_LIB([edit], [el_line], [LIBEDIT_LIBS="-ledit $LIBS"])
     AC_CHECK_LIB([edit], [el_cursor], [ac_cv_has_el_cursor=yes])
+    LIBS="${save_LIBS}"
     AC_CHECK_HEADER([histedit.h], [], [unset LIBEDIT_LIBS])
     AS_IF([test "x$LIBEDIT_LIBS" = "x"], [
       AC_MSG_ERROR([You need to either install libedit-dev (>= 2.11) or configure with --disable-core-libedit-support])
@@ -1761,10 +1764,10 @@ then
 			#
 			# python distutils found, get settings from python directly
 			#
-			PYTHON_CFLAGS="`$PYTHON -c 'from distutils import sysconfig; flags = [[\"-I\" + sysconfig.get_python_inc(0), \"-I\" + sysconfig.get_python_inc(1), \" \".join(sysconfig.get_config_var(\"CFLAGS\").split())]]; print(\" \".join(flags));' | sed -e 's/-arch i386//g;s/-arch x86_64//g'`"
-			PYTHON_LDFLAGS="`$PYTHON -c 'from distutils import sysconfig; libs = sysconfig.get_config_var(\"LIBS\").split() + sysconfig.get_config_var(\"SYSLIBS\").split(); libs.append(\"-lpython\"+sysconfig.get_config_var(\"VERSION\")); print(\" \".join(libs));'`"
-			PYTHON_LIB="`$PYTHON -c 'from distutils import sysconfig; print(\"python\" + sysconfig.get_config_var(\"VERSION\"));'`"
-			PYTHON_LIBDIR="`$PYTHON -c 'from distutils import sysconfig; print(sysconfig.get_config_var(\"LIBDIR\"));'`"
+			PYTHON_CFLAGS="`$PYTHON -c 'from distutils import sysconfig; flags = [["-I" + sysconfig.get_python_inc(0), "-I" + sysconfig.get_python_inc(1), " ".join(sysconfig.get_config_var("CFLAGS").split())]]; print(" ".join(flags));' | sed -e 's/-arch i386//g;s/-arch x86_64//g'`"
+			PYTHON_LDFLAGS="`$PYTHON -c 'from distutils import sysconfig; libs = sysconfig.get_config_var("LIBS").split() + sysconfig.get_config_var("SYSLIBS").split(); libs.append("-lpython"+sysconfig.get_config_var("VERSION")); print(" ".join(libs));'`"
+			PYTHON_LIB="`$PYTHON -c 'from distutils import sysconfig; print("python" + sysconfig.get_config_var("VERSION"));'`"
+			PYTHON_LIBDIR="`$PYTHON -c 'from distutils import sysconfig; print(sysconfig.get_config_var("LIBDIR"));'`"
 
 			# handle python being installed into /usr/local
 			AC_MSG_CHECKING([python libdir])

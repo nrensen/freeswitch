@@ -140,7 +140,7 @@ uninstall:
 	rm -f $(DESTDIR)$(libdir)/$(APIHEADER)
 
 $(LIBRARY): $(LTOBJECTS)
-	$(LINK) -rpath $(libdir) $(LDFLAGS) $(LTOBJECTS)
+	$(LINK) $(LDFLAGS) $(LTOBJECTS)
 
 xmlparse.o \
 xmlparse.lo: xmlparse.c expat.h xmlrole.h xmltok.h $(top_builddir)/config.h

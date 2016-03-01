@@ -1035,7 +1035,7 @@ int credis_info(REDIS rhnd, REDIS_INFO *info)
   int rc = cr_sendfandreceive(rhnd, CR_BULK, "INFO\r\n");
 
   if (rc == 0) {
-    char role[CREDIS_VERSION_STRING_SIZE];
+    char role[CREDIS_VERSION_STRING_SIZE + 1];
     int items = sscanf(rhnd->reply.bulk,
                        "redis_version:%"CR_VERSION_STRING_SIZE_STR"s\r\n" \
                        "uptime_in_seconds:%d\r\n"                         \

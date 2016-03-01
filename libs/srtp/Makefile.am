@@ -8,7 +8,7 @@ AM_LDFLAGS   = $(new_AM_LDFLAGS) -L.
 HMAC_OBJS = @HMAC_OBJS@
 AES_ICM_OBJS = @AES_ICM_OBJS@
 
-lib_LTLIBRARIES = libsrtp.la
+noinst_LTLIBRARIES = libsrtp.la
 libsrtp_la_SOURCES =    srtp/srtp.c srtp/ekt.c crypto/cipher/cipher.c crypto/cipher/null_cipher.c \
 			crypto/hash/null_auth.c crypto/hash/auth.c \
 			crypto/math/datatypes.c crypto/math/stat.c \

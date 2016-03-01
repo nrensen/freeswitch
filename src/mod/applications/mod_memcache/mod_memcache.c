@@ -115,7 +115,7 @@ static switch_status_t config_callback_memcached(switch_xml_config_item_t *data,
 
   end:
 	if (memcached_server) {
-		memcached_server_list_free(memcached_server);
+		memcached_server_free(memcached_server);
 	}
 	if (newmemcached) {
 		memcached_free(newmemcached);

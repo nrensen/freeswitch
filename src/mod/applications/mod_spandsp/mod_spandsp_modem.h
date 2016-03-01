@@ -57,6 +57,8 @@
 #elif defined(__SunOS)
 #include <termios.h>
 #elif defined(__OpenBSD__)
+#include <termios.h>
+#include <util.h>
 #else
 #include <pty.h>
 #endif

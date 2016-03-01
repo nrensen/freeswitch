@@ -1050,7 +1050,7 @@ int main(int argc, char *argv[])
 	}
 
 #ifndef FS_64BIT
-#if defined(HAVE_SETRLIMIT) && !defined(__sun)
+#if defined(HAVE_SETRLIMIT) && !defined(__sun) && !defined(__OpenBSD__)
 	if (!waste && !(flags & SCF_VG)) {
 		struct rlimit rlp;
 

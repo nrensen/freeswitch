@@ -1898,9 +1898,11 @@ int main(int argc, char *argv[])
 	history_end(myhistory);
 	el_end(el);
 #endif
+	thread_running = 0;
+	esl_mutex_lock(MUTEX);
+	esl_mutex_unlock(MUTEX);
 	esl_disconnect(&handle);
 	global_handle = NULL;
-	thread_running = 0;
 
 	do {
 		esl_mutex_lock(MUTEX);
