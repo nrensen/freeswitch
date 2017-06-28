@@ -3388,14 +3388,14 @@ static int cb_verify_peer(int preverify_ok, X509_STORE_CTX *ctx)
 
 ////////////
 
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 static BIO_METHOD dtls_bio_filter_methods;
 #else
 static BIO_METHOD *dtls_bio_filter_methods;
 #endif
 
 BIO_METHOD *BIO_dtls_filter(void) {
-#if OPENSSL_VERSION_NUMBER < 0x10100000L	
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 	return(&dtls_bio_filter_methods);
 #else
 	return(dtls_bio_filter_methods);
@@ -3432,7 +3432,7 @@ static int dtls_bio_filter_new(BIO *bio) {
 	switch_mutex_init(&filter->mutex, SWITCH_MUTEX_NESTED, filter->pool);
  
 	/* Set the BIO as initialized */
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 	bio->init = 1;
 	bio->ptr = filter;
 	bio->flags = 0;
@@ -3453,7 +3453,7 @@ static int dtls_bio_filter_free(BIO *bio) {
 	}
  
 	/* Get rid of the filter state */
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 	filter = (dtls_bio_filter *)bio->ptr;
 #else
 	filter = (dtls_bio_filter *)BIO_get_data(bio);
@@ -3466,7 +3466,7 @@ static int dtls_bio_filter_free(BIO *bio) {
 		filter = NULL;
 	}
 
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 	bio->ptr = NULL;
 	bio->init = 0;
 	bio->flags = 0;
@@ -3484,7 +3484,7 @@ static int dtls_bio_filter_write(BIO *bio, const char *in, int inl) {
 	
 	switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_DEBUG1, "dtls_bio_filter_write: %p, %d\n", (void *)in, inl);
 	/* Forward data to the write BIO */
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 	ret = BIO_write(bio->next_bio, in, inl);
 #else
 	ret = BIO_write(BIO_next(bio), in, inl);
@@ -3493,7 +3493,7 @@ static int dtls_bio_filter_write(BIO *bio, const char *in, int inl) {
 	switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_DEBUG1, "  -- %ld\n", ret);
  
 	/* Keep track of the packet, as we'll advertize them one by one after a pending check */
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 	filter = (dtls_bio_filter *)bio->ptr;
 #else
 	filter = (dtls_bio_filter *)BIO_get_data(bio);
@@ -3528,7 +3528,7 @@ static int dtls_bio_filter_write(BIO *bio, const char *in, int inl) {
 }
  
 static long dtls_bio_filter_ctrl(BIO *bio, int cmd, long num, void *ptr) {
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 	dtls_bio_filter *filter = (dtls_bio_filter *)bio->ptr;
 #else
 	dtls_bio_filter *filter = (dtls_bio_filter *)BIO_get_data(bio);
@@ -3579,7 +3579,7 @@ static long dtls_bio_filter_ctrl(BIO *bio, int cmd, long num, void *ptr) {
 	return 0;
 }
 
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 static BIO_METHOD dtls_bio_filter_methods = {
 	BIO_TYPE_FILTER,
 	"DTLS filter",
@@ -3597,7 +3597,7 @@ static BIO_METHOD *dtls_bio_filter_methods = NULL;
 #endif
 
 static void switch_rtp_dtls_init() {
-#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
 	dtls_bio_filter_methods = BIO_meth_new(BIO_TYPE_FILTER | BIO_get_new_index(), "DTLS filter");
 	BIO_meth_set_write(dtls_bio_filter_methods, dtls_bio_filter_write);
 	BIO_meth_set_ctrl(dtls_bio_filter_methods, dtls_bio_filter_ctrl);
@@ -3607,7 +3607,7 @@ static void switch_rtp_dtls_init() {
 }
 
 static void switch_rtp_dtls_destroy() {
-#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
 	if (dtls_bio_filter_methods) {
 		BIO_meth_free(dtls_bio_filter_methods);
 		dtls_bio_filter_methods = NULL;
@@ -3791,7 +3791,7 @@ SWITCH_DECLARE(switch_status_t) switch_rtp_add_dtls(switch_rtp_t *rtp_session, d
 
 	dtls->ca = switch_core_sprintf(rtp_session->pool, "%s%sca-bundle.crt", SWITCH_GLOBAL_dirs.certs_dir, SWITCH_PATH_SEPARATOR);
 
-#if OPENSSL_VERSION_NUMBER >= 0x10100000
+#if OPENSSL_VERSION_NUMBER >= 0x10100000 || defined(LIBRESSL_VERSION_NUMBER)
 	ssl_method = (type & DTLS_TYPE_SERVER) ? DTLS_server_method() : DTLS_client_method();
 #else
     #ifdef HAVE_OPENSSL_DTLSv1_2_method
@@ -3875,7 +3875,7 @@ SWITCH_DECLARE(switch_status_t) switch_rtp_add_dtls(switch_rtp_t *rtp_session, d
 
 	dtls->ssl = SSL_new(dtls->ssl_ctx);
 
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 	dtls->filter_bio = BIO_new(BIO_dtls_filter());
 #else
 	switch_assert(dtls_bio_filter_methods);

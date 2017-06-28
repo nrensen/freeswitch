@@ -42,7 +42,7 @@
 #if OPENSSL_VERSION_NUMBER < 0x0090800 || !defined(SHA256_DIGEST_LENGTH)
 #error Your OpenSSL is too old, need 0.9.8 or newer with SHA256
 #endif
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 #define HMAC_setup(ctx, key, len)	HMAC_CTX_init(&ctx); HMAC_Init_ex(&ctx, key, len, EVP_sha256(), 0)
 #define HMAC_crunch(ctx, buf, len)	HMAC_Update(&ctx, buf, len)
 #define HMAC_finish(ctx, dig, dlen) HMAC_Final(&ctx, dig, &dlen); HMAC_CTX_cleanup(&ctx)
@@ -158,7 +158,7 @@ static getoff *digoff[] = {GetDigestOffset1, GetDigestOffset2};
 static void HMACsha256(const uint8_t *message, size_t messageLen, const uint8_t *key, size_t keylen, uint8_t *digest)
 {
 	unsigned int digestLen;
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 	HMAC_CTX ctx;
 #else
 	HMAC_CTX *ctx;
