@@ -1487,7 +1487,7 @@ PKG_CHECK_MODULES([FLITE], [flite >= 2],[],[
         AC_MSG_RESULT([no])
       fi
     ])
-  ])
+  ],[flite="false"])
 ])
 
 AM_CONDITIONAL([HAVE_FLITE],[$flite])
